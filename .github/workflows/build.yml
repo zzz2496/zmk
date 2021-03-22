@@ -38,6 +38,8 @@ jobs:
           - iris_right
           - jian_left
           - jian_right
+          - jiran_left
+          - jiran_right
           - jorne_left
           - jorne_right
           - kyria_left
