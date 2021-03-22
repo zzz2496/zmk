@@ -8,9 +8,8 @@ manifest:
       url-base: https://github.com/microsoft
   projects:
     - name: zephyr
-      remote: zmkfirmware
-      revision: v2.4.0+zmk-fixes
-      clone-depth: 1
+      url: https://github.com/petejohanson/zephyr
+      revision: v2.5.0-zmk-fixes
       import:
         # TODO: Rename once upstream offers option like `exclude` or `denylist`
         name-blacklist:
