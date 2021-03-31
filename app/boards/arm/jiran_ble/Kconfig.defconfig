@@ -11,7 +11,7 @@ endif # BOARD_JIRAN_BLE_LEFT
 if BOARD_JIRAN_BLE_RIGHT
 
 	config ZMK_KEYBOARD_NAME
-	default "Jiran BLE (right)"
+	default "Jiran BLE Right"
 
 endif # BOARD_JIRAN_BLE_RIGHT
 
