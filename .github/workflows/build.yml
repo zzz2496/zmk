@@ -67,6 +67,8 @@ jobs:
           - board: nrf52840_m2
             shield: m60
           - board: planck_rev6
+          - board: jiran_ble_left
+          - board: jiran_ble_right
           - board: proton_c
             shield: clueboard_california
           - board: nice_nano

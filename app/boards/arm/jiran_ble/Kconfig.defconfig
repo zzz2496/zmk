@@ -1,0 +1,52 @@
+# Copyright (c) 2021 The ZMK Contributors
+# SPDX-License-Identifier: MIT
+
+if BOARD_JIRAN_BLE_LEFT
+
+	config ZMK_KEYBOARD_NAME
+	default "Jiran BLE"
+
+endif # BOARD_JIRAN_BLE_LEFT
+
+if BOARD_JIRAN_BLE_RIGHT
+
+	config ZMK_KEYBOARD_NAME
+	default "Jiran BLE (right)"
+
+endif # BOARD_JIRAN_BLE_RIGHT
+
+
+if BOARD_JIRAN_BLE_LEFT || BOARD_JIRAN_BLE_RIGHT
+
+config BOARD
+	default "jiran_ble"
+
+config ZMK_SPLIT
+	default y
+
+menuconfig SENSOR
+    bool "Sensor Drivers"
+
+config BT_CTLR
+	default BT
+
+config ZMK_BLE
+	default y
+
+config ZMK_USB
+	default y
+
+config ZMK_BATTERY_VOLTAGE_DIVIDER  # is this correct?
+	default y
+
+if USB
+
+config USB_NRFX
+	default y
+
+config USB_DEVICE_STACK
+	default y
+
+endif # USB
+
+endif # BOARD_JIRAN_BLE_LEFT || BOARD_JIRAN_BLE_RIGHT
