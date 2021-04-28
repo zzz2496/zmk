@@ -140,10 +140,11 @@ void zmk_hid_consumer_clear() { memset(&consumer_report.body, 0, sizeof(consumer
 static int explicit_button_counts[3] = {0, 0, 0};
 static zmk_mod_flags_t explicit_buttons = 0;
 
-#define SET_MOUSE_BUTTONS(buttons)                                                               \
+#define SET_MOUSE_BUTTONS(butts)                                                               \
     {                                                                                            \
-        mouse_report.body.buttons = buttons;                                                     \
-        LOG_DBG("Mouse buttons set to 0x%02X", mouse_report.body.buttons);                       \
+        mouse_report.body.buttons = butts;                                                     \
+        LOG_DBG("Mouse buttons set to 0x%02X", mouse_report.body.buttons);                      \
+        LOG_ERR("Mouse buttons set to 0x%02X", mouse_report.body.buttons);                       \
     }
 
 int zmk_hid_mouse_button_press(zmk_mouse_button_t button) {
@@ -170,18 +171,18 @@ int zmk_hid_mouse_button_release(zmk_mouse_button_t button) {
 }
 
 int zmk_hid_mouse_buttons_press(zmk_mouse_button_flags_t buttons) {
-    for (zmk_mod_t i = 5; i < 8; i++) {
+    for (zmk_mod_t i = 0; i < 3; i++) {
         if (buttons & (1 << i)) {
-            zmk_hid_mouse_press(i);
+            zmk_hid_mouse_button_press(i);
         }
     }
     return 0;
 }
 
 int zmk_hid_mouse_buttons_release(zmk_mouse_button_flags_t buttons) {
-    for (zmk_mod_t i = 5; i < 8; i++) {
+    for (zmk_mod_t i = 0; i < 3; i++) {
         if (buttons & (1 << i)) {
-            zmk_hid_mouse_release(i);
+            zmk_hid_mouse_button_release(i);
         }
     }
     return 0;

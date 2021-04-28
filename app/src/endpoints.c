@@ -131,6 +131,7 @@ static int send_consumer_report() {
 }
 
 static int send_mouse_report() {
+    LOG_ERR("SENDING MOUSE REPORT");
     struct zmk_hid_mouse_report *mouse_report = zmk_hid_get_mouse_report();
 
     switch (current_endpoint) {
