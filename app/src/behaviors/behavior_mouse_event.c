@@ -12,7 +12,7 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
 static int behavior_mouse_event_init(const struct device *dev) { return 0; };
 
-static int on_keymap_binding_pressed(struct zmk_behavior_binding *binding,
+static int on_keymap_binding_pressed_1(struct zmk_behavior_binding *binding,
                                      struct zmk_behavior_binding_event event) {
   LOG_DBG("position %d keycode 0x%02X", event.position, binding->param1);
   LOG_DBG("IF THIS APPERAS IN LOGS I WILL CONSIDER IT A SUCCESS");
@@ -20,7 +20,7 @@ static int on_keymap_binding_pressed(struct zmk_behavior_binding *binding,
       binding->param1, true, event.timestamp));
 }
 
-static int on_keymap_binding_released(struct zmk_behavior_binding *binding,
+static int on_keymap_binding_released_1(struct zmk_behavior_binding *binding,
                                       struct zmk_behavior_binding_event event) {
   LOG_DBG("position %d keycode 0x%02X", event.position, binding->param1);
   LOG_DBG("IF THIS APPERAS IN LOGS I WILL CONSIDER IT A SUCCESS");
@@ -29,8 +29,8 @@ static int on_keymap_binding_released(struct zmk_behavior_binding *binding,
 }
 
 static const struct behavior_driver_api behavior_mouse_event_driver_api = {
-    .binding_pressed = on_keymap_binding_pressed,
-    .binding_released = on_keymap_binding_released};
+    .binding_pressed = on_keymap_binding_pressed_1,
+    .binding_released = on_keymap_binding_released_1};
 
 #define ME_INST(n)                                                             \
   DEVICE_AND_API_INIT(behavior_mouse_event_##n, DT_INST_LABEL(n),              \
