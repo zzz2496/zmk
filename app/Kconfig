@@ -366,7 +366,7 @@ config ZMK_USB_LOGGING
 if ZMK_USB_LOGGING
 
 config ZMK_LOG_LEVEL
-	default 7
+	default 4
 
 config USB_CDC_ACM_RINGBUF_SIZE
 	default 1024
