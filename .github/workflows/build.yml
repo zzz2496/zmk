@@ -20,7 +20,7 @@ jobs:
         board:
           - nrfmicro_13
         shield:
-          - rt_22_left
+          - rt-22_left
         cmake-args: [""]
     steps:
       - name: Checkout
