@@ -1,7 +1,7 @@
 # Copyright (c) 2020 The ZMK Contributors
 # SPDX-License-Identifier: MIT
 
-description: Key press/release behavior
+description: Mouse press or move
 
 compatible: "zmk,behavior-mouse-event"
 

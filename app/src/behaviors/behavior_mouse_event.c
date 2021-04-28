@@ -28,7 +28,24 @@ static int on_keymap_binding_released_1(struct zmk_behavior_binding *binding,
       binding->param1, false, event.timestamp));
 }
 
+static int
+on_mouse_event_binding_convert_central_state_dependent_params(struct zmk_behavior_binding *binding,
+                                                         struct zmk_behavior_binding_event event) {
+    const struct device *ext_power = device_get_binding("MOUSE_EVENT");
+    if (ext_power == NULL) {
+        LOG_ERR("Unable to retrieve ext_power device: %d", binding->param1);
+        return -EIO;
+    }
+    /* if (binding->param1 == EXT_POWER_TOGGLE_CMD) { */
+    /*     binding->param1 = ext_power_get(ext_power) > 0 ? EXT_POWER_OFF_CMD : EXT_POWER_ON_CMD; */
+    /* } */
+
+    return 0;
+}
+
+
 static const struct behavior_driver_api behavior_mouse_event_driver_api = {
+    .binding_convert_central_state_dependent_params = on_mouse_event_binding_convert_central_state_dependent_params,
     .binding_pressed = on_keymap_binding_pressed_1,
     .binding_released = on_keymap_binding_released_1};
 
