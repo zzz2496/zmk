@@ -10,6 +10,7 @@
 #include <usb/class/usb_hid.h>
 
 #include <zmk/keys.h>
+#include <zmk/mouse.h>
 #include <dt-bindings/zmk/hid_usage.h>
 #include <dt-bindings/zmk/hid_usage_pages.h>
 
@@ -193,6 +194,17 @@ struct zmk_hid_consumer_report {
     struct zmk_hid_consumer_report_body body;
 } __packed;
 
+struct zmk_hid_mouse_report_body {
+    zmk_mouse_buttons_t buttons;
+    int8_t x;
+    int8_t y;
+} __packed;
+
+struct zmk_hid_mouse_report {
+    uint8_t report_id;
+    struct zmk_hid_mouse_report_body body;
+} __packed;
+
 zmk_mod_flags_t zmk_hid_get_explicit_mods();
 int zmk_hid_register_mod(zmk_mod_t modifier);
 int zmk_hid_unregister_mod(zmk_mod_t modifier);
@@ -210,3 +222,4 @@ void zmk_hid_consumer_clear();
 
 struct zmk_hid_keyboard_report *zmk_hid_get_keyboard_report();
 struct zmk_hid_consumer_report *zmk_hid_get_consumer_report();
+struct zmk_hid_mouse_report *zmk_hid_get_mouse_report();
