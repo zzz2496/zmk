@@ -195,7 +195,7 @@ struct zmk_hid_consumer_report {
 } __packed;
 
 struct zmk_hid_mouse_report_body {
-    zmk_mouse_buttons_t buttons;
+    zmk_mouse_button_flags_t buttons;
     int8_t x;
     int8_t y;
 } __packed;
@@ -219,6 +219,12 @@ void zmk_hid_keyboard_clear();
 int zmk_hid_consumer_press(zmk_key_t key);
 int zmk_hid_consumer_release(zmk_key_t key);
 void zmk_hid_consumer_clear();
+
+int zmk_hid_mouse_button_press(zmk_mouse_button_t button);
+int zmk_hid_mouse_button_release(zmk_mouse_button_t button);
+int zmk_hid_mouse_buttons_presse(zmk_mouse_button_flags_t buttons);
+int zmk_hid_mouse_buttons_release(zmk_mouse_button_flags_t buttons);
+void zmk_hid_mouse_clear();
 
 struct zmk_hid_keyboard_report *zmk_hid_get_keyboard_report();
 struct zmk_hid_consumer_report *zmk_hid_get_consumer_report();

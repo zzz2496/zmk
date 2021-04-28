@@ -134,6 +134,61 @@ int zmk_hid_consumer_release(zmk_key_t code) {
 
 void zmk_hid_consumer_clear() { memset(&consumer_report.body, 0, sizeof(consumer_report.body)); }
 
+
+// Keep track of how often a button was pressed.
+// Only release the button if the count is 0.
+static int explicit_button_counts[3] = {0, 0, 0};
+static zmk_mod_flags_t explicit_buttons = 0;
+
+#define SET_MOUSE_BUTTONS(buttons)                                                               \
+    {                                                                                            \
+        mouse_report.body.buttons = buttons;                                                     \
+        LOG_DBG("Mouse buttons set to 0x%02X", mouse_report.body.buttons);                       \
+    }
+
+int zmk_hid_mouse_button_press(zmk_mouse_button_t button) {
+    explicit_button_counts[button]++;
+    LOG_DBG("Button %d count %d", button, explicit_button_counts[button]);
+    WRITE_BIT(explicit_buttons, button, true);
+    SET_MOUSE_BUTTONS(explicit_buttons);
+    return 0;
+}
+
+int zmk_hid_mouse_button_release(zmk_mouse_button_t button) {
+    if (explicit_button_counts[button] <= 0) {
+        LOG_ERR("Tried to release button %d too often", button);
+        return -EINVAL;
+    }
+    explicit_button_counts[button]--;
+    LOG_DBG("Button %d count: %d", button, explicit_button_counts[button]);
+    if (explicit_button_counts[button] == 0) {
+        LOG_DBG("Button %d released", button);
+        WRITE_BIT(explicit_buttons, button, false);
+    }
+    SET_MOUSE_BUTTONS(explicit_buttons);
+    return 0;
+}
+
+int zmk_hid_mouse_buttons_press(zmk_mouse_button_flags_t buttons) {
+    for (zmk_mod_t i = 5; i < 8; i++) {
+        if (buttons & (1 << i)) {
+            zmk_hid_mouse_press(i);
+        }
+    }
+    return 0;
+}
+
+int zmk_hid_mouse_buttons_release(zmk_mouse_button_flags_t buttons) {
+    for (zmk_mod_t i = 5; i < 8; i++) {
+        if (buttons & (1 << i)) {
+            zmk_hid_mouse_release(i);
+        }
+    }
+    return 0;
+}
+
+void zmk_hid_mouse_clear() { memset(&mouse_report.body, 0, sizeof(mouse_report.body)); }
+
 struct zmk_hid_keyboard_report *zmk_hid_get_keyboard_report() {
     return &keyboard_report;
 }
