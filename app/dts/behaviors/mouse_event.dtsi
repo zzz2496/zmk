@@ -1,0 +1,10 @@
+
+/ {
+	behaviors {
+		/omit-if-no-ref/ cp: me: behavior_mouse_event {
+			compatible = "zmk,behavior-mouse-event";
+			label = "MOUSE_EVENT";
+			#binding-cells = <1>;
+		};
+	};
+};
