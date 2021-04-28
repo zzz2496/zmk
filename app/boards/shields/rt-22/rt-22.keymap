@@ -13,7 +13,7 @@
 #define RSE 2
 #define ADJ 3
 
-#define ME_TEST (HID_USAGE(HID_USAGE_GD, 0x80))
+#define ME_TEST (HID_USAGE(HID_USAGE_GD, 0x01))
 
 / {
 keymap {
