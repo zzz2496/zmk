@@ -195,6 +195,7 @@ struct zmk_hid_consumer_report {
 } __packed;
 
 struct zmk_hid_mouse_report_body {
+    uint8_t buffer;
     zmk_mouse_button_flags_t buttons;
     int8_t x;
     int8_t y;
