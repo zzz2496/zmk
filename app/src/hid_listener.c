@@ -35,8 +35,8 @@ static int hid_listener_keycode_pressed(const struct zmk_keycode_state_changed *
             return err;
         }
         break;
-    case HID_USAGE_MOUSE:
-        err = zmk_hid_mouse_press(ev->keycode);
+    case HID_USAGE_GD:
+        err = zmk_hid_mouse_buttons_press(ev->keycode);
         if (err) {
             LOG_ERR("Unable to press button");
             return err;
@@ -68,7 +68,7 @@ static int hid_listener_keycode_released(const struct zmk_keycode_state_changed 
         }
         break;
     case HID_USAGE_GD:
-        err = zmk_hid_mouse_release(ev->keycode);
+        err = zmk_hid_mouse_buttons_release(ev->keycode);
         if (err) {
             LOG_ERR("Unable to release button");
             return err;
