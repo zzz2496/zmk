@@ -188,7 +188,10 @@ int zmk_hid_mouse_buttons_release(zmk_mouse_button_flags_t buttons) {
     return 0;
 }
 
-void zmk_hid_mouse_clear() { memset(&mouse_report.body, 0, sizeof(mouse_report.body)); }
+void zmk_hid_mouse_clear() {
+    memset(&mouse_report.body, 0, sizeof(mouse_report.body));
+    mouse_report.body.buffer = 1;
+}
 
 struct zmk_hid_keyboard_report *zmk_hid_get_keyboard_report() {
     return &keyboard_report;
