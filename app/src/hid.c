@@ -172,7 +172,7 @@ int zmk_hid_mouse_button_release(zmk_mouse_button_t button) {
 int zmk_hid_mouse_buttons_press(zmk_mouse_button_flags_t buttons) {
     for (zmk_mod_t i = 5; i < 8; i++) {
         if (buttons & (1 << i)) {
-            zmk_hid_mouse_press(i);
+            zmk_hid_mouse_button_press(i);
         }
     }
     return 0;
@@ -181,7 +181,7 @@ int zmk_hid_mouse_buttons_press(zmk_mouse_button_flags_t buttons) {
 int zmk_hid_mouse_buttons_release(zmk_mouse_button_flags_t buttons) {
     for (zmk_mod_t i = 5; i < 8; i++) {
         if (buttons & (1 << i)) {
-            zmk_hid_mouse_release(i);
+            zmk_hid_mouse_button_release(i);
         }
     }
     return 0;
