@@ -161,6 +161,18 @@ static const uint8_t zmk_hid_report_desc[] = {
     0x09, 0x30, /*     Usage (X) */
     0x09, 0x31, /*     Usage (Y) */
     0x81, 0x06, /*     Input (Data,Var,Rel,No Wrap,Linear,...) */
+    0x15, 0x81, /*     Logical Minimum (-127) */
+    0x25, 0x7F, /*     Logical Maximum (127) */
+    0x75, 0x08, /*     Report Count (8) */
+    0x95, 0x01, /*     Report Size (1) */
+    0x09, 0x38, /*     Usage (Wheel) */
+    0x81, 0x06, /*     Input (Data,Var,Rel,No Wrap,Linear,...) */
+    0x05, 0x0C, /*     Usage Page (Consumer) */ // Horizontal wheel
+    0x0A, 0x38, 0x02, /*     Usage (AC Pan) */
+    0x15, 0x81, /*     Logical Minimum (-127) */
+    0x25, 0x7f, /*     Logical Maximum (127) */
+    0x95, 0x01, /*     Report Count (1) */
+    0x81, 0x06, /*     Input (Data,Var,Rel,No Wrap,Linear,...) */
     0xC0,       /*   End Collection */
     0xC0,       /* End Collection */
 };
@@ -196,6 +208,8 @@ struct zmk_hid_mouse_report_body {
     zmk_mouse_button_flags_t buttons;
     int16_t x;
     int16_t y;
+    int8_t wheel_hor;
+    int8_t wheel_vert;
 } __packed;
 
 struct zmk_hid_mouse_report {
@@ -222,6 +236,10 @@ int zmk_hid_mouse_button_press(zmk_mouse_button_t button);
 int zmk_hid_mouse_button_release(zmk_mouse_button_t button);
 int zmk_hid_mouse_buttons_press(zmk_mouse_button_flags_t buttons);
 int zmk_hid_mouse_buttons_release(zmk_mouse_button_flags_t buttons);
+int zmk_hid_mouse_movement_press(int16_t x, int16_t y);
+int zmk_hid_mouse_movement_release(int16_t x, int16_t y);
+int zmk_hid_mouse_wheel_press(int8_t hor, int8_t vert);
+int zmk_hid_mouse_wheel_release(int8_t hor, int8_t vert);
 void zmk_hid_mouse_clear();
 
 struct zmk_hid_keyboard_report *zmk_hid_get_keyboard_report();
