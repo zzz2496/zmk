@@ -161,6 +161,18 @@ static const uint8_t zmk_hid_report_desc[] = {
     0x09, 0x30, /*     Usage (X) */
     0x09, 0x31, /*     Usage (Y) */
     0x81, 0x06, /*     Input (Data,Var,Rel,No Wrap,Linear,...) */
+    0x15, 0x81, /*     Logical Minimum (-127) */
+    0x25, 0x7F, /*     Logical Maximum (127) */
+    0x75, 0x08, /*     Report Count (8) */
+    0x95, 0x01, /*     Report Size (1) */
+    0x09, 0x38, /*     Usage (Wheel) */
+    0x81, 0x06, /*     Input (Data,Var,Rel,No Wrap,Linear,...) */
+    0x05, 0x0C, /*     Usage Page (Consumer) */ // Horizontal wheel
+    0x0A, 0x38, 0x02, /*     Usage (AC Pan) */
+    0x15, 0x81, /*     Logical Minimum (-127) */
+    0x25, 0x7f, /*     Logical Maximum (127) */
+    0x95, 0x01, /*     Report Count (1) */
+    0x81, 0x06, /*     Input (Data,Var,Rel,No Wrap,Linear,...) */
     0xC0,       /*   End Collection */
     0xC0,       /* End Collection */
 };
