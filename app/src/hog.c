@@ -285,8 +285,7 @@ int zmk_hog_send_consumer_report(struct zmk_hid_consumer_report_body *report) {
 };
 
 K_MSGQ_DEFINE(zmk_hog_mouse_msgq, sizeof(struct zmk_hid_mouse_report_body),
-CONFIG_ZMK_BLE_MOUSE_REPORT_QUEUE_SIZE, 4);
-
+            CONFIG_ZMK_BLE_MOUSE_REPORT_QUEUE_SIZE, 4);
 
 void send_mouse_report_callback(struct k_work *work) {
     struct zmk_hid_mouse_report_body report;
@@ -300,7 +299,7 @@ void send_mouse_report_callback(struct k_work *work) {
         }
 
         struct bt_gatt_notify_params notify_params = {
-            .attr = &hog_svc.attrs[10],
+            .attr = &hog_svc.attrs[15],
             .data = &report,
             .len = sizeof(report),
         };
@@ -319,6 +318,7 @@ K_WORK_DEFINE(hog_mouse_work, send_mouse_report_callback);
 int zmk_hog_send_mouse_report(struct zmk_hid_mouse_report_body *report) {
     int err = k_msgq_put(&zmk_hog_mouse_msgq, report, K_MSEC(100));
     LOG_ERR("Sending mouse report");
+    LOG_ERR(err);
     if (err) {
         switch (err) {
         case -EAGAIN: {
