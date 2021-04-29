@@ -138,8 +138,6 @@ int zmk_endpoints_send_report(uint16_t usage_page) {
         return send_keyboard_report();
     case HID_USAGE_CONSUMER:
         return send_consumer_report();
-    case HID_USAGE_GD:
-        return send_mouse_report();
     default:
         LOG_ERR("Unsupported usage page %d", usage_page);
         return -ENOTSUP;
