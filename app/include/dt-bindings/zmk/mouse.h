@@ -39,6 +39,6 @@
 
 #define WHEEL_DOWN (0x00FF)
 
-#define WHEEL_LEFT (0x0100)
+#define WHEEL_LEFT (0xFF00)
 
-#define WHEEL_RIGHT (0xFF00)
+#define WHEEL_RIGHT (0x0100)
