@@ -35,7 +35,7 @@
 
 #define MOVE_RIGHT (0x01000000)
 
-#define WHEEL_UP (0x0010)
+#define WHEEL_UP (0x0001)
 
 #define WHEEL_DOWN (0x00FF)
 
