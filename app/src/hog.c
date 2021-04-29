@@ -57,7 +57,7 @@ static struct hids_report consumer_input = {
 };
 
 static struct hids_report mouse_input = {
-    .id = 0x03,
+    .id = 0x04,
     .type = HIDS_INPUT,
 };
 
@@ -299,7 +299,7 @@ void send_mouse_report_callback(struct k_work *work) {
         }
 
         struct bt_gatt_notify_params notify_params = {
-            .attr = &hog_svc.attrs[15],
+            .attr = &hog_svc.attrs[5],
             .data = &report,
             .len = sizeof(report),
         };
