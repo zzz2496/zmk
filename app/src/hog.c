@@ -57,7 +57,7 @@ static struct hids_report consumer_input = {
 };
 
 static struct hids_report mouse_input = {
-    .id = 0x03,
+    .id = 0x04,
     .type = HIDS_INPUT,
 };
 
