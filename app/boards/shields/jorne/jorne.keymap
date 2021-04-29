@@ -8,6 +8,7 @@
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/outputs.h>
+#include <dt-bindings/zmk/mouse.h>
 
 #define DEF 0
 #define LWR 1
@@ -29,9 +30,9 @@
 //        | LALT |  Z  |  X  |  C  |  V  |  B  |   |  N  |  M   |  ,  |  .  |  /  | RALT |
 //                           | RSE | SPC | LWR |   | LWR | BKSP | RSE |
                         bindings = <
-   &kp LWIN &kp ME_1  &kp Q &kp W &kp E &kp R &kp T &kp Y         &kp U  &kp I     &kp O   &kp P    &kp LBKT &mt RWIN RBKT
-            &kp ME_2  &kp A &kp S &kp D &kp F &kp G &kp H         &kp J  &kp K     &kp L   &kp SEMI &mt RCTRL SQT
-            &out OUT_TOG  &kp Z &kp X &kp C &kp V &kp B &kp N         &kp M  &kp COMMA &kp DOT &kp FSLH &kp BSLH
+    &kp LWIN &mkp LCLK &mwh WHEEL_UP &mmv MOVE_UP &mwh WHEEL_LEFT &mwh WHEEL_RIGHT &kp T &kp Y         &kp U  &kp I     &kp O   &kp P    &kp LBKT &mt RWIN RBKT
+            &mkp RCLK &mmv MOVE_LEFT &mmv MOVE_DOWN &mmv MOVE_RIGHT &kp F &kp G &kp H         &kp J  &kp K     &kp L   &kp SEMI &mt RCTRL SQT
+            &out OUT_TOG  &mwh WHEEL_DOWN &kp X &kp C &kp V &kp B &kp N         &kp M  &kp COMMA &kp DOT &kp FSLH &kp BSLH
                          &lt RSE TAB &mt LSHFT SPACE &lt LWR RET &lt LWR ESC &mt RSHFT BSPC &lt RSE DEL
                         >;
                 };
