@@ -26,7 +26,7 @@ static int on_keymap_binding_pressed(struct zmk_behavior_binding *binding,
     int16_t x = HID_USAGE_PAGE(binding->param1);
     int16_t y = HID_USAGE_ID(binding->param1);
     zmk_hid_mouse_movement_press(x, y);
-    return zmk_send_mouse_report();
+    return zmk_endpoints_send_mouse_report();
 }
 
 static int on_keymap_binding_released(struct zmk_behavior_binding *binding,
@@ -35,7 +35,7 @@ static int on_keymap_binding_released(struct zmk_behavior_binding *binding,
     int16_t x = HID_USAGE_PAGE(binding->param1);
     int16_t y = HID_USAGE_ID(binding->param1);
     zmk_hid_mouse_movement_release(x, y);
-    return zmk_send_mouse_report();
+    return zmk_endpoints_send_mouse_report();
 }
 
 static const struct behavior_driver_api behavior_mouse_move_press_driver_api = {
