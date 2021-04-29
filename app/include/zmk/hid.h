@@ -206,10 +206,10 @@ struct zmk_hid_consumer_report {
 
 struct zmk_hid_mouse_report_body {
     zmk_mouse_button_flags_t buttons;
-    int16_t x;
-    int16_t y;
-    int8_t wheel_hor;
-    int8_t wheel_vert;
+    uint16_t x;
+    uint16_t y;
+    uint8_t wheel_vert;
+    uint8_t wheel_hor;
 } __packed;
 
 struct zmk_hid_mouse_report {
