@@ -26,7 +26,7 @@ static int on_keymap_binding_pressed(struct zmk_behavior_binding *binding,
     int8_t x = HID_USAGE_ID(binding->param1) & 0xFF;
     int8_t y = (HID_USAGE_ID(binding->param1) & 0xFF00) >> 4;
     zmk_hid_mouse_wheel_press(x, y);
-    return send_mouse_report();
+    return zmk_send_mouse_report();
 }
 
 static int on_keymap_binding_released(struct zmk_behavior_binding *binding,
@@ -35,7 +35,7 @@ static int on_keymap_binding_released(struct zmk_behavior_binding *binding,
     int8_t x = HID_USAGE_ID(binding->param1) & 0xFF;
     int8_t y = (HID_USAGE_ID(binding->param1) & 0xFF00) >> 4;
     zmk_hid_mouse_wheel_press(x, y);
-    return send_mouse_report();
+    return zmk_send_mouse_report();
 }
 
 static const struct behavior_driver_api behavior_mouse_wheel_driver_api = {

@@ -24,14 +24,14 @@ static int on_keymap_binding_pressed(struct zmk_behavior_binding *binding,
                                      struct zmk_behavior_binding_event event) {
     LOG_DBG("position %d keycode 0x%02X", event.position, binding->param1);
     zmk_hid_mouse_buttons_press(HID_USAGE_ID(binding->param1));
-    return send_mouse_report();
+    return zmk_send_mouse_report();
 }
 
 static int on_keymap_binding_released(struct zmk_behavior_binding *binding,
                                       struct zmk_behavior_binding_event event) {
     LOG_DBG("position %d keycode 0x%02X", event.position, binding->param1);
     zmk_hid_mouse_buttons_release(HID_USAGE_ID(binding->param1));
-    return send_mouse_report();
+    return zmk_send_mouse_report();
 }
 
 static const struct behavior_driver_api behavior_mouse_key_press_driver_api = {
