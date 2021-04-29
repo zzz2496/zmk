@@ -10,6 +10,8 @@
 #include <zephyr.h>
 #include <zmk/event_manager.h>
 
+LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
+
 struct zmk_mouse_state_changed {
   uint32_t x;
   uint32_t y;
