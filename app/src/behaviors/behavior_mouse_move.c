@@ -17,8 +17,6 @@
 
 LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
-ZMK_EVENT_DECLARE(zmk_mouse_move);
-
 static int behavior_mouse_move_init(const struct device *dev) { return 0; };
 
 static int on_keymap_binding_pressed(struct zmk_behavior_binding *binding,
