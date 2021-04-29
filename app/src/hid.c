@@ -148,21 +148,21 @@ static zmk_mod_flags_t explicit_buttons = 0;
     }
 
 int zmk_hid_mouse_button_press(zmk_mouse_button_t button) {
-    explicit_button_counts[button-5]++;
-    LOG_DBG("Button %d count %d", button, explicit_button_counts[button-5]);
+    explicit_button_counts[button]++;
+    LOG_DBG("Button %d count %d", button, explicit_button_counts[button]);
     WRITE_BIT(explicit_buttons, button, true);
     SET_MOUSE_BUTTONS(explicit_buttons);
     return 0;
 }
 
 int zmk_hid_mouse_button_release(zmk_mouse_button_t button) {
-    if (explicit_button_counts[button-5] <= 0) {
+    if (explicit_button_counts[button] <= 0) {
         LOG_ERR("Tried to release button %d too often", button);
         return -EINVAL;
     }
-    explicit_button_counts[button-5]--;
-    LOG_DBG("Button %d count: %d", button, explicit_button_counts[button-5]);
-    if (explicit_button_counts[button-5] == 0) {
+    explicit_button_counts[button]--;
+    LOG_DBG("Button %d count: %d", button, explicit_button_counts[button]);
+    if (explicit_button_counts[button] == 0) {
         LOG_DBG("Button %d released", button);
         WRITE_BIT(explicit_buttons, button, false);
     }

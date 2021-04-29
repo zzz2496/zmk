@@ -18,9 +18,10 @@ jobs:
     strategy:
       matrix:
         board:
-          - nrfmicro_13
+          - nice_nano
         shield:
-          - rt-22_left
+          - jorne_left
+          - jorne_right
         cmake-args: [""]
     steps:
       - name: Checkout
