@@ -29,7 +29,7 @@
 
 #define MOVE_UP (0x0000FFFF)
 
-#define MOVE_DOWN (0x90000100)
+#define MOVE_DOWN (0x00000100)
 
 #define MOVE_LEFT (0xFFFF0000)
 
