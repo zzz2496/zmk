@@ -25,6 +25,7 @@ static int on_keymap_binding_pressed(struct zmk_behavior_binding *binding,
     LOG_DBG("position %d keycode 0x%02X", event.position, binding->param1);
     uint32_t x = (binding->param1 & 0xFFFF0000) >> 16;
     uint32_t y = binding->param1 & 0x0000FFFF;
+    LOG_DBG("x 0x%02X y 0x%02X", x, y);
     zmk_hid_mouse_movement_press(x, y);
     return zmk_endpoints_send_mouse_report();
 }
@@ -34,6 +35,7 @@ static int on_keymap_binding_released(struct zmk_behavior_binding *binding,
     LOG_DBG("position %d keycode 0x%02X", event.position, binding->param1);
     uint32_t x = (binding->param1 & 0xFFFF0000) >> 16;
     uint32_t y = binding->param1 & 0x0000FFFF;
+    LOG_DBG("x 0x%02X y 0x%02X", x, y);
     zmk_hid_mouse_movement_release(x, y);
     return zmk_endpoints_send_mouse_report();
 }
