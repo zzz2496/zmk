@@ -16,7 +16,6 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 #include <zmk/hid.h>
 #include <dt-bindings/zmk/hid_usage_pages.h>
 #include <zmk/endpoints.h>
-#include <kernel.h>
 
 static int hid_listener_keycode_pressed(const struct zmk_keycode_state_changed *ev) {
     int err;
@@ -87,25 +86,17 @@ static int hid_listener_keycode_released(const struct zmk_keycode_state_changed 
     return zmk_endpoints_send_report(ev->usage_page);
 }
 
-K_SEM_DEFINE(mouse_is_moving_semaphore, 0, 4);
+static int mouse_is_moving_counter = 0;
 
 void mouse_timer_cb(struct k_timer *dummy);
 
 K_TIMER_DEFINE(mouse_timer, mouse_timer_cb, NULL);
 
-K_MUTEX_DEFINE(my_mutex);
-
 void mouse_timer_cb(struct k_timer *dummy)
 {
-    /* if (mouse_is_moving_semaphore) { */
-    if (k_sem_take(&mouse_is_moving_semaphore, K_FOREVER) != 0) {
-
-        k_mutex_lock(&my_mutex, K_FOREVER);
+    if (mouse_is_moving_counter) {
         zmk_endpoints_send_mouse_report();
-        k_sem_give(&mouse_is_moving_semaphore);
-        k_mutex_unlock(&my_mutex);
-
-        k_timer_start(&mouse_timer, K_MSEC(10), K_NO_WAIT);
+        k_timer_start(&mouse_timer, K_MSEC(10), 0);
     }
 }
 
@@ -118,12 +109,9 @@ static int hid_listener_mouse_pressed(const struct zmk_mouse_state_changed *ev) 
         return err;
     }
     // race condition?
-    /* mouse_is_moving_semaphore += 1; */
-    k_sem_give(&mouse_is_moving_semaphore);
-    k_timer_start(&mouse_timer, K_MSEC(10), K_NO_WAIT);
-    // return zmk_endpoints_send_mouse_report();
-
-    return 0;
+    mouse_is_moving_counter += 1;
+    k_timer_start(&mouse_timer, K_MSEC(10), 0);
+    return zmk_endpoints_send_mouse_report();
 }
 
 static int hid_listener_mouse_released(const struct zmk_mouse_state_changed *ev) {
@@ -135,14 +123,8 @@ static int hid_listener_mouse_released(const struct zmk_mouse_state_changed *ev)
         return err;
     }
     // race condition?
-    /* mouse_is_moving_semaphore -= 1; */
-    k_sem_take(&mouse_is_moving_semaphore, K_FOREVER);
-
-    k_mutex_lock(&my_mutex, K_FOREVER);
-    zmk_endpoints_send_mouse_report();
-    k_mutex_unlock(&my_mutex);
-    return 0;
-    // return zmk_endpoints_send_mouse_report();
+    mouse_is_moving_counter -= 1;
+    return zmk_endpoints_send_mouse_report();
 }
 
 int hid_listener(const zmk_event_t *eh) {
