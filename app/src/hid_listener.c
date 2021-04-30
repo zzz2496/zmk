@@ -16,6 +16,7 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 #include <zmk/hid.h>
 #include <dt-bindings/zmk/hid_usage_pages.h>
 #include <zmk/endpoints.h>
+#include <kernel.h>
 
 static int hid_listener_keycode_pressed(const struct zmk_keycode_state_changed *ev) {
     int err;
@@ -86,7 +87,7 @@ static int hid_listener_keycode_released(const struct zmk_keycode_state_changed 
     return zmk_endpoints_send_report(ev->usage_page);
 }
 
-static int mouse_is_moving_semaphore = 0;
+K_SEM_DEFINE(mouse_is_moving_semaphore, 0, 2);
 
 void mouse_timer_cb(struct k_timer *dummy);
 
@@ -94,7 +95,8 @@ K_TIMER_DEFINE(mouse_timer, mouse_timer_cb, NULL);
 
 void mouse_timer_cb(struct k_timer *dummy)
 {
-    if (mouse_is_moving_semaphore) {
+    /* if (mouse_is_moving_semaphore) { */
+    if (k_sem_take(&my_sem, K_MSEC(10)) != 0) {
         zmk_endpoints_send_mouse_report();
         k_timer_start(&mouse_timer, K_MSEC(10), K_NO_WAIT);
     }
@@ -109,7 +111,8 @@ static int hid_listener_mouse_pressed(const struct zmk_mouse_state_changed *ev) 
         return err;
     }
     // race condition?
-    mouse_is_moving_semaphore += 1;
+    /* mouse_is_moving_semaphore += 1; */
+    k_sem_give(&mouse_is_moving_semaphore);
     k_timer_start(&mouse_timer, K_MSEC(10), K_NO_WAIT);
     return zmk_endpoints_send_mouse_report();
 }
@@ -123,7 +126,8 @@ static int hid_listener_mouse_released(const struct zmk_mouse_state_changed *ev)
         return err;
     }
     // race condition?
-    mouse_is_moving_semaphore -= 1;
+    /* mouse_is_moving_semaphore -= 1; */
+    k_sem_take(&mouse_is_moving_semaphore);
     return zmk_endpoints_send_mouse_report();
 }
 
