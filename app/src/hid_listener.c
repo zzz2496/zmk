@@ -128,7 +128,7 @@ static int hid_listener_mouse_released(const struct zmk_mouse_state_changed *ev)
     }
     // race condition?
     /* mouse_is_moving_semaphore -= 1; */
-    k_sem_take(&mouse_is_moving_semaphore);
+    k_sem_take(&mouse_is_moving_semaphore, K_FOREVER);
     return zmk_endpoints_send_mouse_report();
 }
 
