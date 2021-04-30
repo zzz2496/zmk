@@ -96,7 +96,7 @@ K_TIMER_DEFINE(mouse_timer, mouse_timer_cb, NULL);
 void mouse_timer_cb(struct k_timer *dummy)
 {
     /* if (mouse_is_moving_semaphore) { */
-    if (k_sem_take(&mouse_is_moving_semaphore, K_MSEC(10)) != 0) {
+    if (k_sem_take(&mouse_is_moving_semaphore, K_NO_WAIT) != 0) {
         zmk_endpoints_send_mouse_report();
         k_sem_give(&mouse_is_moving_semaphore);
         k_timer_start(&mouse_timer, K_MSEC(10), K_NO_WAIT);
