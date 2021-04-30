@@ -94,9 +94,9 @@ K_TIMER_DEFINE(mouse_timer, mouse_timer_cb, NULL);
 
 void mouse_timer_cb(struct k_timer *dummy)
 {
-    if (mouse_is_moving_counter) {
+    if (mouse_is_moving_counter != 0) {
         zmk_endpoints_send_mouse_report();
-        k_timer_start(&mouse_timer, K_MSEC(10), 0);
+        k_timer_start(&mouse_timer, K_MSEC(10), K_NO_WAIT);
     }
 }
 
@@ -110,7 +110,7 @@ static int hid_listener_mouse_pressed(const struct zmk_mouse_state_changed *ev) 
     }
     // race condition?
     mouse_is_moving_counter += 1;
-    k_timer_start(&mouse_timer, K_MSEC(10), 0);
+    k_timer_start(&mouse_timer, K_MSEC(10), K_NO_WAIT);
     return zmk_endpoints_send_mouse_report();
 }
 
