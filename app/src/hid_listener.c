@@ -88,7 +88,7 @@ static int mouse_timer_ref_count = 0;
 
 void mouse_timer_ref() {
   if (mouse_timer_ref_count == 0) {
-    k_timer_start(&mouse_timer, 0, K_MSEC(10));
+    k_timer_start(&mouse_timer, K_NO_WAIT, K_MSEC(10));
   }
   mouse_timer_ref_count += 1;
 }
