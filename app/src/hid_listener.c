@@ -84,17 +84,17 @@ void mouse_timer_cb(struct k_timer *dummy) { k_work_submit(&mouse_work); }
 
 K_TIMER_DEFINE(mouse_timer, mouse_timer_cb, mouse_timer_cb);
 
-static int mouse_is_moving_counter = 0;
+static int mouse_timer_ref_count = 0;
 
 void mouse_timer_ref() {
   if (mouse_timer_ref_count == 0) {
     k_timer_start(&mouse_timer, 0, K_MSEC(10));
   }
-  mouse_is_moving_counter += 1;
+  mouse_timer_ref_count += 1;
 }
 
 void mouse_timer_unref() {
-  mouse_is_moving_counter -= 1;
+  mouse_timer_ref_count -= 1;
   if (mouse_timer_ref_count == 0) {
     k_timer_stop(&mouse_timer);
   }
