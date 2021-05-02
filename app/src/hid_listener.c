@@ -72,10 +72,10 @@ static int hid_listener_keycode_released(const struct zmk_keycode_state_changed 
 }
 
 static void zmk_mouse_work(struct k_work *work) {
-  int rc = zmk_endpoints_send_mouse_report();
-  if (rc != 0) {
-    LOG_ERR("Failed to send mouse report, error: %d", rc);
-  }
+    int rc = zmk_endpoints_send_mouse_report();
+    if (rc != 0) {
+        LOG_ERR("Failed to send mouse report, error: %d", rc);
+    }
 }
 
 K_WORK_DEFINE(mouse_work, &zmk_mouse_work);
@@ -87,17 +87,17 @@ K_TIMER_DEFINE(mouse_timer, mouse_timer_cb, mouse_timer_cb);
 static int mouse_timer_ref_count = 0;
 
 void mouse_timer_ref() {
-  if (mouse_timer_ref_count == 0) {
-    k_timer_start(&mouse_timer, K_NO_WAIT, K_MSEC(10));
-  }
-  mouse_timer_ref_count += 1;
+    if (mouse_timer_ref_count == 0) {
+        k_timer_start(&mouse_timer, K_NO_WAIT, K_MSEC(10));
+    }
+    mouse_timer_ref_count += 1;
 }
 
 void mouse_timer_unref() {
-  mouse_timer_ref_count -= 1;
-  if (mouse_timer_ref_count == 0) {
-    k_timer_stop(&mouse_timer);
-  }
+    mouse_timer_ref_count -= 1;
+    if (mouse_timer_ref_count == 0) {
+        k_timer_stop(&mouse_timer);
+    }
 }
 
 static int hid_listener_mouse_pressed(const struct zmk_mouse_state_changed *ev) {
