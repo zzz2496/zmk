@@ -50,15 +50,16 @@
 
 #define MOVE_DOWN (0x00000001)
 
-#define MOVE_VERT(vert) ((vert * (INT16_MAX / 100)))
-
 #define MOVE_LEFT (0xFFFF0000)
 
 #define MOVE_RIGHT (0x00010000)
 
-#define MOVE_HOR(hor) ((hor * (INT16_MAX / 100)) << 16)
+/* -32767 to 32767, barely usable beyond about 50 (probably depends on screen resolution) */
+#define MOVE_VERT(vert) ((vert) < 0 ? -(vert) : (1 << 16) - (vert))
 
-#define MOVE(hor, vert) (((hor * (INT16_MAX / 100)) << 16) + ((vert * (INT16_MAX / 100))))
+#define MOVE_HOR(hor) (((hor) > 0 ? (hor) : (1 << 16) + (hor)) << 16)
+
+#define MOVE(hor, vert) (MOVE_HOR(hor) + MOVE_VERT(vert))
 
 /* Mouse wheel behavior */
 
@@ -69,3 +70,10 @@
 #define WHEEL_LEFT (0xFF00)
 
 #define WHEEL_RIGHT (0x0100)
+
+/* -127 to 127, barely usable beyond about 10 */
+#define WHEEL_VERT(vert) ((vert) < 0 ? (1 << 8) + (vert) : vert)
+
+#define WHEEL_HOR(hor) (((hor) < 0 ? (1 << 8) + (hor) : hor) << 8)
+
+#define WHEEL(hor, vert) (WHEEL_HOR(hor) + WHEEL_VERT(vert))
