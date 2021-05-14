@@ -10,21 +10,21 @@
 #include <drivers/behavior.h>
 #include <logging/log.h>
 
-#include <zmk/event_manager.h>
-#include <zmk/events/keycode_state_changed.h>
 #include <zmk/behavior.h>
-#include <zmk/events/mouse_state_changed.h>
+#include <zmk/event_manager.h>
+#include <zmk/events/mouse_move_state_changed.h>
 
 LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
+
+#if DT_HAS_COMPAT_STATUS_OKAY(DT_DRV_COMPAT)
 
 static int behavior_mouse_move_init(const struct device *dev) { return 0; };
 
 static int on_keymap_binding_pressed(struct zmk_behavior_binding *binding,
                                      struct zmk_behavior_binding_event event) {
     LOG_DBG("position %d keycode 0x%02X", event.position, binding->param1);
-    int res = ZMK_EVENT_RAISE(
-        zmk_mouse_state_changed_from_encoded(binding->param1, true, event.timestamp));
-    return res;
+    return ZMK_EVENT_RAISE(
+        zmk_mouse_move_state_changed_from_encoded(binding->param1, true, event.timestamp));
 }
 
 static int on_keymap_binding_released(struct zmk_behavior_binding *binding,
@@ -32,7 +32,7 @@ static int on_keymap_binding_released(struct zmk_behavior_binding *binding,
     LOG_DBG("position %d keycode 0x%02X", event.position, binding->param1);
 
     return ZMK_EVENT_RAISE(
-        zmk_mouse_state_changed_from_encoded(binding->param1, false, event.timestamp));
+        zmk_mouse_move_state_changed_from_encoded(binding->param1, false, event.timestamp));
 }
 
 static const struct behavior_driver_api behavior_mouse_move_driver_api = {
@@ -44,3 +44,5 @@ static const struct behavior_driver_api behavior_mouse_move_driver_api = {
                         &behavior_mouse_move_driver_api);
 
 DT_INST_FOREACH_STATUS_OKAY(KP_INST)
+
+#endif /* DT_HAS_COMPAT_STATUS_OKAY(DT_DRV_COMPAT) */
