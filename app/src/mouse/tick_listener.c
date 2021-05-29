@@ -11,17 +11,9 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 #include <zmk/event_manager.h>
 #include <zmk/events/mouse_tick.h>
 #include <zmk/endpoints.h>
-#include <zmk/mouse/vector2d.h>
+#include <zmk/mouse.h>
 
 #include <sys/util.h>
-
-/**
- * config options
- * delay
- * initial_speed
- * max_speed
- * time_to_max_speed
- */
 
 // CLAMP will be provided by sys/util.h from zephyr 2.6 onward
 #define CLAMP(x, min, max) MIN(MAX(x, min), max)
@@ -40,16 +32,6 @@ static float powf(float base, float exponent) {
 #include <math.h>
 #endif
 
-struct movement_config {
-    // todo: configure the mouse profiles using devicetree
-    int delay_ms;
-    int time_to_max_speed_ms;
-    // acceleration exponent 0: uniform speed at max speed
-    // acceleration exponent 1: uniform acceleration from min_speed to max_speed
-    // acceleration exponent 2: uniform jerk, linear increase in acceleration from min_speed to
-    float acceleration_exponent;
-};
-
 struct movement_state {
     int64_t start;
     int64_t last_tick;
@@ -57,14 +39,14 @@ struct movement_state {
 };
 
 struct movement_state move_state = {0};
-static struct movement_config move_config = (struct movement_config){
+static struct mouse_config move_config = (struct mouse_config){
     .delay_ms = 0,
     .time_to_max_speed_ms = 300,
     .acceleration_exponent = 2.0,
 };
 
 struct movement_state scroll_state = {0};
-static struct movement_config scroll_config = (struct movement_config){
+static struct mouse_config scroll_config = (struct mouse_config){
     .delay_ms = 0,
     .time_to_max_speed_ms = 300,
     .acceleration_exponent = 2.0,
@@ -81,7 +63,7 @@ static int64_t ms_since_start(int64_t start, int64_t now) {
     return move_duration;
 }
 
-static float speed(struct movement_config *config, float max_speed, int64_t duration_ms) {
+static float speed(struct mouse_config *config, float max_speed, int64_t duration_ms) {
     // Calculate the speed based on MouseKeysAccel
     // See https://en.wikipedia.org/wiki/Mouse_keys
     if (duration_ms > config->time_to_max_speed_ms) {
@@ -97,7 +79,7 @@ static void track_remainder(float *move, float *remainder) {
     *move = (int)new_move;
 }
 
-static struct vector2d update_movement(struct movement_state *state, struct movement_config *config,
+static struct vector2d update_movement(struct movement_state *state, struct mouse_config *config,
                                        struct vector2d max_speed, int64_t now) {
     struct vector2d move = {0};
     if (max_speed.x == 0 && max_speed.y == 0) {

@@ -9,10 +9,11 @@
 
 #include <zephyr.h>
 #include <zmk/event_manager.h>
+#include <zmk/mouse.h>
 
 struct zmk_mouse_move_state_changed {
-    int32_t x;
-    int32_t y;
+    struct vector2d max_speed;
+    struct mouse_config config;
     bool state;
     int64_t timestamp;
 };
@@ -20,11 +21,13 @@ struct zmk_mouse_move_state_changed {
 ZMK_EVENT_DECLARE(zmk_mouse_move_state_changed);
 
 static inline struct zmk_mouse_move_state_changed_event *
-zmk_mouse_move_state_changed_from_encoded(uint32_t encoded, bool pressed, int64_t timestamp) {
-
-    int32_t x = (encoded & 0xFFFF0000) >> 16;
-    int32_t y = encoded & 0x0000FFFF;
+zmk_mouse_move_state_changed_from_encoded(uint32_t encoded, struct mouse_config config,
+                                          bool pressed, int64_t timestamp) {
+    struct vector2d max_speed = (struct vector2d){
+        .x = MOVE_HOR_DECODE(encoded),
+        .y = MOVE_VERT_DECODE(encoded),
+    };
 
     return new_zmk_mouse_move_state_changed((struct zmk_mouse_move_state_changed){
-        .x = x, .y = y, .state = pressed, .timestamp = timestamp});
+        .max_speed = max_speed, .config = config, .state = pressed, .timestamp = timestamp});
 }

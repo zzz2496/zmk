@@ -20,6 +20,8 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
 static struct vector2d move_speed = {0};
 static struct vector2d scroll_speed = {0};
+static struct mouse_config move_config = {0};
+static struct mouse_config scroll_config = {0};
 
 static void clear_mouse_state() {
     move_speed = (struct vector2d){0};
@@ -29,8 +31,7 @@ static void clear_mouse_state() {
 static void mouse_tick_timer_handler(struct k_work *work) {
     zmk_hid_mouse_movement_set(0, 0);
     zmk_hid_mouse_scroll_set(0, 0);
-    ZMK_EVENT_RAISE(
-        zmk_mouse_tick(move_speed.x, move_speed.y, scroll_speed.x, scroll_speed.y, k_uptime_get()));
+    ZMK_EVENT_RAISE(zmk_mouse_tick(move_speed, scroll_speed, move_config, scroll_config));
     zmk_endpoints_send_mouse_report();
 }
 
@@ -62,26 +63,26 @@ void mouse_timer_unref() {
 }
 
 static void listener_mouse_move_pressed(const struct zmk_mouse_move_state_changed *ev) {
-    move_speed.x += ev->x;
-    move_speed.y += ev->y;
+    move_speed.x += ev->max_speed.x;
+    move_speed.y += ev->max_speed.y;
     mouse_timer_ref();
 }
 
 static void listener_mouse_move_released(const struct zmk_mouse_move_state_changed *ev) {
-    move_speed.x -= ev->x;
-    move_speed.y -= ev->y;
+    move_speed.x -= ev->max_speed.x;
+    move_speed.y -= ev->max_speed.y;
     mouse_timer_unref();
 }
 
 static void listener_mouse_scroll_pressed(const struct zmk_mouse_scroll_state_changed *ev) {
-    scroll_speed.x += ev->x;
-    scroll_speed.y += ev->y;
+    scroll_speed.x += ev->max_speed.x;
+    scroll_speed.y += ev->max_speed.y;
     mouse_timer_ref();
 }
 
 static void listener_mouse_scroll_released(const struct zmk_mouse_scroll_state_changed *ev) {
-    scroll_speed.x -= ev->x;
-    scroll_speed.y -= ev->y;
+    scroll_speed.x -= ev->max_speed.x;
+    scroll_speed.y -= ev->max_speed.y;
     mouse_timer_unref();
 }
 
