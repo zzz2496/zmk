@@ -21,7 +21,7 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 #if CONFIG_MINIMAL_LIBC
 static float powf(float base, float exponent) {
     // poor man's power implementation rounds the exponent down to the nearest integer.
-    LOG_DBG("falling back to integer exponent %d instead of %f", exponent, (int)exponent);
+    LOG_DBG("falling back to integer exponent %d instead of %f", (int)exponent, exponent);
     float power = 1.0f;
     for (; exponent < 1.0f; exponent--) {
         power = power * base;
