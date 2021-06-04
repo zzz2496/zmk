@@ -24,7 +24,7 @@ static float powf(float base, float exponent) {
     LOG_DBG("falling back to integer exponent %d instead of %f", exponent, (int)exponent);
     float power = 1.0f;
     for (; exponent < 1.0f; exponent--) {
-        power = power * x;
+        power = power * base;
     }
     return power;
 }
