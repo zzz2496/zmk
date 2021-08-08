@@ -11,7 +11,7 @@ static uint32_t get_threshold(const struct debounce_state *state,
     return state->pressed ? config->debounce_release_ms : config->debounce_press_ms;
 }
 
-bool debounce_update(struct debounce_state *state, const bool active,
+void debounce_update(struct debounce_state *state, const bool active,
                      const struct debounce_config *config) {
     // This uses a variation of the integrator debouncing described at
     // https://www.kennethkuhn.com/electronics/debounce.c
@@ -22,20 +22,19 @@ bool debounce_update(struct debounce_state *state, const bool active,
         if (state->counter > 0) {
             state->counter--;
         }
-
-        return false;
+        return;
     }
 
     const uint32_t flip_threshold = get_threshold(state, config);
 
     if (state->counter < flip_threshold) {
         state->counter++;
-        return false;
+        return;
     }
 
     state->pressed = !state->pressed;
     state->counter = 0;
-    return true;
+    state->changed = true;
 }
 
 bool debounce_is_active(const struct debounce_state *state) {
@@ -43,3 +42,11 @@ bool debounce_is_active(const struct debounce_state *state) {
 }
 
 bool debounce_is_pressed(const struct debounce_state *state) { return state->pressed; }
+
+bool debounce_did_change(struct debounce_state *state) {
+    if (state->changed) {
+        state->changed = false;
+        return true;
+    }
+    return false;
+}

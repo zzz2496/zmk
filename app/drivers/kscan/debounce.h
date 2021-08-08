@@ -10,12 +10,13 @@
 #include <stdint.h>
 #include <sys/util.h>
 
-#define DEBOUNCE_COUNTER_BITS 7
+#define DEBOUNCE_COUNTER_BITS 14
 #define DEBOUNCE_COUNTER_MAX BIT_MASK(DEBOUNCE_COUNTER_BITS)
 
 struct debounce_state {
     bool pressed : 1;
-    uint8_t counter : DEBOUNCE_COUNTER_BITS;
+    bool changed : 1;
+    uint16_t counter : DEBOUNCE_COUNTER_BITS;
 };
 
 struct debounce_config {
@@ -29,19 +30,22 @@ struct debounce_config {
  * Debounces one switch.
  *
  * @note For the timings in "config" to be accurate, this currently assumes that
- * it is called once per millisecond.
+ * it is called at 1 ms intervals.
  *
  * @param state The state for the switch to debounce.
  * @param active Is the switch currently pressed?
  * @param config Debounce settings.
- * @returns whether debounce_is_pressed() changed for the switch.
+ *
+ * @post If the pressed state changed, sets the "changed" flag so that the next
+ * call to debounce_did_change() returns true.
  */
-bool debounce_update(struct debounce_state *state, const bool active,
+void debounce_update(struct debounce_state *state, const bool active,
                      const struct debounce_config *config);
 
 /**
  * @returns whether the switch is either latched as pressed or it is potentially
- * pressed but the debouncer has not yet made a decision.
+ * pressed but the debouncer has not yet made a decision. If this returns true,
+ * the kscan driver should continue to poll at 1 ms intervals.
  */
 bool debounce_is_active(const struct debounce_state *state);
 
@@ -49,3 +53,8 @@ bool debounce_is_active(const struct debounce_state *state);
  * @returns whether the switch is latched as pressed.
  */
 bool debounce_is_pressed(const struct debounce_state *state);
+
+/**
+ * @returns the "changed" flag and clears it.
+ */
+bool debounce_did_change(struct debounce_state *state);

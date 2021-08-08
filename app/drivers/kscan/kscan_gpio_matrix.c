@@ -99,9 +99,7 @@ struct kscan_matrix_data {
      * Current state of the matrix as a flattened 2D array of length
      * (config->rows.len * config->cols.len)
      */
-    struct debounce_state *current_state;
-    /** Buffer for reading in the next matrix state. Parallel array to current_state. */
-    bool *next_state;
+    struct debounce_state *matrix_state;
 };
 
 struct kscan_gpio_list {
@@ -266,7 +264,9 @@ static int kscan_matrix_read(const struct device *dev) {
             const struct kscan_gpio_dt_spec *in_gpio = &config->inputs.gpios[i];
 
             const int index = state_index_io(config, i, o);
-            data->next_state[index] = gpio_pin_get(in_gpio->port, in_gpio->pin);
+            const bool active = gpio_pin_get(in_gpio->port, in_gpio->pin);
+
+            debounce_update(&data->matrix_state[index], active, &config->debounce_config);
         }
 
         err = gpio_pin_set(out_gpio->port, out_gpio->pin, 0);
@@ -282,9 +282,9 @@ static int kscan_matrix_read(const struct device *dev) {
     for (int r = 0; r < config->rows.len; r++) {
         for (int c = 0; c < config->cols.len; c++) {
             const int index = state_index_rc(config, r, c);
-            struct debounce_state *state = &data->current_state[index];
+            struct debounce_state *state = &data->matrix_state[index];
 
-            if (debounce_update(state, data->next_state[index], &config->debounce_config)) {
+            if (debounce_did_change(state)) {
                 const bool pressed = debounce_is_pressed(state);
 
                 LOG_DBG("Sending event at %i,%i state %s", r, c, pressed ? "on" : "off");
@@ -454,15 +454,13 @@ static const struct kscan_driver_api kscan_matrix_api = {
     static const struct kscan_gpio_dt_spec kscan_matrix_cols_##index[] = {                         \
         UTIL_LISTIFY(INST_COLS_LEN(index), KSCAN_GPIO_COL_CFG_INIT, index)};                       \
                                                                                                    \
-    static struct debounce_state kscan_current_state_##index[INST_MATRIX_LEN(index)];              \
-    static bool kscan_next_state_##index[INST_MATRIX_LEN(index)];                                  \
+    static struct debounce_state kscan_matrix_state_##index[INST_MATRIX_LEN(index)];               \
                                                                                                    \
     COND_INTERRUPTS((static struct kscan_matrix_irq_callback                                       \
                          kscan_matrix_irqs_##index[INST_INPUTS_LEN(index)];))                      \
                                                                                                    \
     static struct kscan_matrix_data kscan_matrix_data_##index = {                                  \
-        .current_state = kscan_current_state_##index,                                              \
-        .next_state = kscan_next_state_##index,                                                    \
+        .matrix_state = kscan_matrix_state_##index,                                                \
         COND_INTERRUPTS((.irqs = kscan_matrix_irqs_##index, ))};                                   \
                                                                                                    \
     static struct kscan_matrix_config kscan_matrix_config_##index = {                              \

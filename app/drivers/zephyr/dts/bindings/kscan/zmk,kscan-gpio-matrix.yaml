@@ -22,11 +22,11 @@ properties:
   debounce-press-ms:
     type: int
     default: 5
-    description: Debounce time for key press in milliseconds. Must be <= 127. Use 0 for eager debouncing.
+    description: Debounce time for key press in milliseconds. Use 0 for eager debouncing.
   debounce-release-ms:
     type: int
     default: 5
-    description: Debounce time for key release in milliseconds. Must be <= 127.
+    description: Debounce time for key release in milliseconds.
   poll-period-ms:
     type: int
     default: 10
