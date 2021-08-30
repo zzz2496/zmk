@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: MIT
  */
 
+#define DT_DRV_COMPAT zmk_split_listener
+
 #include <device.h>
 #include <drivers/sensor.h>
 #include <power/reboot.h>

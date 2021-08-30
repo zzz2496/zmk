@@ -16,7 +16,7 @@
 
 		/omit-if-no-ref/ bootloader: behavior_reset_dfu {
 			compatible = "zmk,behavior-reset";
-			label = "BOOTLOAD";
+			label = "BOOTLOADER_RESET";
 			type = <RST_UF2>;
 			#binding-cells = <0>;
 		};
