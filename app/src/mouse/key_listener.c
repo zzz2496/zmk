@@ -23,9 +23,17 @@ static struct vector2d scroll_speed = {0};
 static struct mouse_config move_config = {0};
 static struct mouse_config scroll_config = {0};
 
-static void clear_mouse_state() {
+static void clear_mouse_state(struct k_work *work) {
     move_speed = (struct vector2d){0};
     scroll_speed = (struct vector2d){0};
+    zmk_hid_mouse_movement_set(0, 0);
+    zmk_hid_mouse_scroll_set(0, 0);
+}
+
+K_WORK_DEFINE(mouse_clear, &clear_mouse_state);
+
+void mouse_clear_cb(struct k_timer *dummy) {
+    k_work_submit_to_queue(zmk_mouse_work_q(), &mouse_clear);
 }
 
 static void mouse_tick_timer_handler(struct k_work *work) {
@@ -41,7 +49,7 @@ void mouse_timer_cb(struct k_timer *dummy) {
     k_work_submit_to_queue(zmk_mouse_work_q(), &mouse_tick);
 }
 
-K_TIMER_DEFINE(mouse_timer, mouse_timer_cb, NULL);
+K_TIMER_DEFINE(mouse_timer, mouse_timer_cb, mouse_clear_cb);
 
 static int mouse_timer_ref_count = 0;
 
@@ -58,7 +66,6 @@ void mouse_timer_unref() {
     }
     if (mouse_timer_ref_count == 0) {
         k_timer_stop(&mouse_timer);
-        clear_mouse_state();
     }
 }
 
