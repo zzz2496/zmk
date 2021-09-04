@@ -20,14 +20,23 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
 static struct vector2d move_speed = {0};
 static struct vector2d scroll_speed = {0};
-static struct mouse_config move_config = {0};
-static struct mouse_config scroll_config = {0};
+static struct mouse_config move_config = (struct mouse_config){
+        .delay_ms = 0,
+        .time_to_max_speed_ms = 300,
+        .acceleration_exponent = 2.0,
+};
+static struct mouse_config scroll_config = (struct mouse_config){
+        .delay_ms = 0,
+        .time_to_max_speed_ms = 300,
+        .acceleration_exponent = 2.0,
+};
 
 static void clear_mouse_state(struct k_work *work) {
     move_speed = (struct vector2d){0};
     scroll_speed = (struct vector2d){0};
     zmk_hid_mouse_movement_set(0, 0);
     zmk_hid_mouse_scroll_set(0, 0);
+    ZMK_EVENT_RELEASE(zmk_mouse_tick(move_speed, scroll_speed, move_config, scroll_config));
 }
 
 K_WORK_DEFINE(mouse_clear, &clear_mouse_state);
