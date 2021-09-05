@@ -62,8 +62,9 @@ static void track_remainder(float *move, float *remainder) {
     *move = (int)new_move;
 }
 
-static struct vector2d update_movement(struct movement_state *state, const struct mouse_config *config,
-                                       struct vector2d max_speed, int64_t now) {
+static struct vector2d update_movement(struct movement_state *state,
+                                       const struct mouse_config *config, struct vector2d max_speed,
+                                       int64_t now) {
     struct vector2d move = {0};
     if (max_speed.x == 0 && max_speed.y == 0) {
         *state = (struct movement_state){0};
