@@ -13,10 +13,7 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 #include <zmk/endpoints.h>
 #include <zmk/mouse.h>
 
-#include <sys/util.h>
-
-// CLAMP will be provided by sys/util.h from zephyr 2.6 onward
-#define CLAMP(x, min, max) MIN(MAX(x, min), max)
+#include <sys/util.h> // CLAMP
 
 #if CONFIG_MINIMAL_LIBC
 static float powf(float base, float exponent) {
@@ -49,7 +46,7 @@ static int64_t ms_since_start(int64_t start, int64_t now) {
     return move_duration;
 }
 
-static float speed(struct mouse_config *config, float max_speed, int64_t duration_ms) {
+static float speed(const struct mouse_config *config, float max_speed, int64_t duration_ms) {
     // Calculate the speed based on MouseKeysAccel
     // See https://en.wikipedia.org/wiki/Mouse_keys
     if (duration_ms > config->time_to_max_speed_ms || config->time_to_max_speed_ms == 0) {
@@ -65,7 +62,7 @@ static void track_remainder(float *move, float *remainder) {
     *move = (int)new_move;
 }
 
-static struct vector2d update_movement(struct movement_state *state, struct mouse_config *config,
+static struct vector2d update_movement(struct movement_state *state, const struct mouse_config *config,
                                        struct vector2d max_speed, int64_t now) {
     struct vector2d move = {0};
     if (max_speed.x == 0 && max_speed.y == 0) {
